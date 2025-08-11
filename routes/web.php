@@ -53,7 +53,6 @@ Route::post('/search', function (Request $request) {
     $results = MasterMessage::where('name', 'like', "%{$search}%")
         ->orWhere('email', 'like', "%{$search}%")
         ->orderBy('created_at', 'desc')
-        ->take(1)
         ->get();
 
     return response()->json($results);
