@@ -39,3 +39,23 @@ Route::post('/form', function (Request $request) {
 
     return redirect()->route('form')->with('success', 'Your message has been sent successfully.');
 })->name('form.submit');
+
+
+Route::get('/messages', function () {
+    // Ambil 20 pesan terakhir, urut dari yang paling baru ke lama
+    $messages = MasterMessage::orderBy('created_at', 'desc')->take(20)->get();
+
+    return response()->json($messages);
+});
+
+Route::post('/search', function (Request $request) {
+    $search = $request->input('search');
+    $results = MasterMessage::where('name', 'like', "%{$search}%")
+        ->orWhere('email', 'like', "%{$search}%")
+        ->orderBy('created_at', 'desc')
+        ->take(1)
+        ->get();
+
+    return response()->json($results);
+});
+
