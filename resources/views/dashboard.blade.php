@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container mx-auto">
+    <div class="">
         <div class="flex justify-center items-center h-screen relative">
             <div
-                class="chat-container relative bg-white rounded-lg shadow-lg overflow-hidden p-4 max-w-[1210px] max-h-[540px] w-full h-full">
+                class="chat-container relative bg-white rounded-lg shadow-lg overflow-hidden p-4 w-full h-full">
 
                 <!-- Bubble container -->
                 <div class="chat-body relative w-full h-full overflow-hidden rounded-lg"></div>
@@ -31,9 +31,8 @@
                 </form>
             </div>
 
-
             <!-- Main modal -->
-            <div id="default-modal" class="hidden z-[99] fixed inset-0 items-center justify-end w-full h-full bg-black/50">
+            <div id="default-modal" class="hidden z-[99] fixed inset-0 items-center justify-end w-full h-full right-5 top-5 ">
 
                 <div id="chat-modal" class="relative w-full max-w-2xl h-full md:h-auto p-4 cursor-move">
                     <div class="relative bg-white text-black rounded-lg shadow-lg h-[400px] flex flex-col">
@@ -51,7 +50,7 @@
             </div>
 
             <!-- Modal Wrapper -->
-            <div id="image-modal" class="hidden fixed inset-0  flex items-center justify-center z-50">
+            <div id="image-modal" class="hidden fixed inset-0  flex items-center justify-start z-50 ">
                 <div id="modal-box" class="relative bg-white p-3 rounded-lg shadow-lg cursor-move">
                     <!-- Tombol Close -->
                     <button id="close-modal" class="absolute top-2 right-2 text-red-500 font-bold">X</button>
@@ -198,6 +197,9 @@
 
     // ========= Show Profile Image =========
     window.showProfileImage = (id) => {
+        const defaultModal = document.getElementById('default-modal');
+
+        defaultModal.classList.add('hidden');
         fetch(`/user/${id}`, {
             method: 'GET',
             headers: {
