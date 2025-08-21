@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->nullable();
             $table->text('message');
+            $table->string('merged_image');
             $table->timestamps();
         });
     }

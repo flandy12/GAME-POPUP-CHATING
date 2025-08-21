@@ -9,7 +9,7 @@
   @vite('resources/css/app.css')
 </head>
 
-    <body class="bg-[#e3e8f8]">
+    <body class="bg-[#e3e8f8] w-full">
 
     @yield('content')
 

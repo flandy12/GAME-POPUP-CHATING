@@ -13,6 +13,7 @@
     "dependencies": {
         "@tailwindcss/vite": "^4.1.11",
         "laravel-echo": "^2.1.6",
+        "pusher-js": "^8.4.0",
         "tailwindcss": "^4.1.11"
     }
 }

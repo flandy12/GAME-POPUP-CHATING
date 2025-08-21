@@ -14,22 +14,19 @@
 //  * for events that are broadcast by Laravel. Echo and event broadcasting
 //  * allows your team to easily build robust real-time web applications.
 //  */
-
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
 
 window.Echo = new Echo({
-    broadcaster: 'reverb',
-    key: import.meta.env.VITE_APP_KEY,
+   broadcaster: 'reverb',
     key: import.meta.env.VITE_REVERB_APP_KEY,
     wsHost: import.meta.env.VITE_REVERB_HOST,
-    wsPort: import.meta.env.VITE_REVERB_PORT,
-    wssPort: import.meta.env.VITE_REVERB_PORT, // Needed if using SSL/HTTPS
+    wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
+    wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
     forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'http') === 'https',
-    disableStats: true,
-    enabledTransports: ['ws', 'wss'], // Specify WebSocket transports
+    enabledTransports: ['ws', 'wss'],
 });
 
 document.addEventListener('DOMContentLoaded', () => {
