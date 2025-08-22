@@ -6,7 +6,7 @@
                 <div class="chat-container relative bg-white rounded-lg shadow-lg overflow-hidden p-4 w-full h-full">
 
                     <!-- Bubble container -->
-                    <div
+                    <div id="chat-grid"
                         class="chat-body relative w-full h-full overflow-hidden p-4 
             grid grid-cols-5 gap-4 auto-rows-max">
                     </div>
@@ -107,17 +107,17 @@
                 document.body.style.userSelect = "auto";
             });
 
-
-
             const grid = document.getElementById("chat-grid");
 
             function spawnBubble(text) {
+                if (!grid) return;
+
                 // pilih kolom random (1-5)
                 const col = Math.floor(Math.random() * 5) + 1;
 
                 const bubble = document.createElement("div");
                 bubble.className = "bubble";
-                bubble.style.gridColumn = col; // taruh di kolom random
+                bubble.style.gridColumn = col;
                 bubble.innerText = text;
 
                 grid.appendChild(bubble);
@@ -125,6 +125,15 @@
                 // hapus setelah animasi selesai
                 bubble.addEventListener("animationend", () => bubble.remove());
             }
+
+            setInterval(() => {
+                const messages = [
+                    "Halo 👋", "Laravel power!", "Mantap 🔥",
+                    "Selamat malam 🌙", "Lagi sibuk 😅"
+                ];
+                const msg = messages[Math.floor(Math.random() * messages.length)];
+                spawnBubble(msg);
+            }, 1500);
 
             // ========= Search Form =========
             searchForm.addEventListener('submit', function(e) {
