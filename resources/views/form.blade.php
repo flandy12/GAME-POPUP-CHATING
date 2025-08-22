@@ -1,22 +1,26 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class=" mx-auto xl:w-[1200px]">
-        <div class="mb-5 mx-auto text-center p-4 mx-auto max-w-md">
-            <label class="block mb-2 text-sm font-medium text-gray-600">Preview dengan Frame</label>
-            <div class="border rounded-lg overflow-hidden w-[400px] bg-gray-100 flex items-center justify-cente text-center">
-                <canvas id="frameCanvas" width="400" height="600"></canvas>
+    <div class="container mx-auto xl:w-[1200px] text-2xl flex flex-col xl:flex-row gap-5 p-10 flex-col-2">
+        <div class="mb-5 mx-auto text-center p-4 flex justify-center flex-col w-full"  style="width: -webkit-fill-available;">
+            <label class="block e5t-gray-600  mb-5 font-semibold">Preview dengan Frame</label>
+
+            <div class="border rounded-lg w-full bg-gray-100 flex items-center justify-center aspect-[2/3]">
+                <canvas id="frameCanvas" height="500" class="w-full h-full"></canvas>
             </div>
-            <small class="text-gray-500">Geser & zoom foto agar pas dengan frame</small>
+
+            <small class="text-gray-500 mt-5 font-semibold">Geser & zoom foto agar pas dengan frame</small>
         </div>
-        <!-- @if (session('success'))
-    @endif -->
-        <form id="contact-form" class="p-4 mb-10 mx-auto max-w-md bg-white w-full rounded-lg shadow-lg"
+
+        @if (session('success'))
+        @endif
+
+        <form id="contact-form" class="w-full p-4 mb-10 mx-auto bg-white rounded-lg shadow-lg "
             action="{{ route('form.submit') }}" enctype="multipart/form-data" method="POST">
 
             @if (session('success'))
                 <div id="success-alert"
-                    class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 "
+                    class="flex items-center p-4 mb-4 text-green-800 border border-green-300 rounded-lg bg-green-50 "
                     role="alert">
                     <svg class="shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor" viewBox="0 0 20 20">
@@ -34,38 +38,38 @@
             @csrf
 
             <div class="mb-5">
-                <label for="photo" class="block mb-2 text-sm font-medium text-gray-600">Upload Foto</label>
+                <label for="photo" class="block mb-2 font-medium text-gray-600">Upload Foto</label>
                 <input type="file" name="photo" id="photo" accept="image/*"
-                    class="bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg block w-full p-2.5" required>
+                    class="bg-gray-50 border border-gray-300 text-gray-600 rounded-lg block w-full p-2.5" required>
             </div>
 
             <!-- hidden input hasil gabungan -->
             <input type="hidden" name="merged_image" id="mergedImage">
 
             <div class="mb-5">
-                <label for="name" class="block mb-2 text-sm font-medium text-gray-600">Your name</label>
+                <label for="name" class="block mb-2 font-medium text-gray-600">Your name</label>
                 <input type="text" name="name" id="name"
-                    class="bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    class="bg-gray-50 border border-gray-300 text-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="name" required />
             </div>
 
             <div class="mb-5">
-                <label for="email" class="block mb-2 text-sm font-medium text-gray-600">Your email</label>
+                <label for="email" class="block mb-2 font-medium text-gray-600">Your email</label>
                 <input type="email" name="email" id="email"
-                    class="bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    class="bg-gray-50 border  border-gray-300 text-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="name@flowbite.com" required />
             </div>
 
             <div class="mb-5">
-                <label for="message" class="block mb-2 text-sm font-medium text-gray-600">Your message</label>
+                <label for="message" class="block mb-2 font-medium text-gray-600">Your message</label>
                 <textarea id="message" name="message" rows="4"
-                    class="bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    class="bg-gray-50 border border-gray-300 text-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="Write your message here..."></textarea>
             </div>
 
 
             <button type="submit"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
+                class="text-white  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg w-full sm:w-auto px-5 py-2.5 text-center">
                 Submit
             </button>
 
@@ -87,11 +91,11 @@
 
             const topPadding = 100;
             const photoAreaHeight = 310;
-            const messageAreaStart = topPadding + photoAreaHeight; // 500
+            const messageAreaStart = topPadding + photoAreaHeight;
 
             let photo = new Image();
             let frame = new Image();
-            frame.src = "{{ asset('images/frame-04.png') }}"; // frame PNG transparan
+            frame.src = "{{ asset('images/frame-04.png') }}";
             frame.onload = () => draw();
 
             let state = {
@@ -126,41 +130,40 @@
             function draw() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                if (photo.src) {
+                // Foto
+                if (photo && photo.complete && photo.naturalWidth > 0) {
                     const drawWidth = photo.width * state.scale;
                     const drawHeight = photo.height * state.scale;
                     ctx.drawImage(photo, state.x, state.y, drawWidth, drawHeight);
                 }
 
-                if (frame.complete) ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+                // Frame
+                if (frame && frame.complete) {
+                    ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+                }
 
+                // Pesan dari TinyMCE
                 const messageValue = tinymce.get('message')?.getContent({
                     format: 'text'
                 }).trim() || '';
 
                 if (messageValue) {
-                    ctx.font = "14px Arial";
+                    const fontSize = Math.max(14, Math.floor(canvas.width * 0.04));
+                    ctx.font = `${fontSize}px Arial`;
                     ctx.fillStyle = "black";
                     ctx.textAlign = "center";
 
-                    const paddingLeft = 80;
-                    const paddingRight = 80;
-                    const bottomPadding = 50;
+                    // Padding kiri/kanan 70px
+                    const paddingLeft = 70;
+                    const paddingRight = 70;
                     const maxWidth = canvas.width - paddingLeft - paddingRight;
-                    const lineHeight = 25;
-                    // posisi Y: mulai dari area message + padding bottom
-                    const startY = messageAreaStart + 45;
+                    const lineHeight = fontSize * 1.4;
+
+                    // Posisi Y mulai di bawah area foto
+                    const startY = messageAreaStart + 0;
+
                     wrapText(ctx, messageValue, canvas.width / 2, startY, maxWidth, lineHeight);
                 }
-
-                // garis bantu (hapus kalau tidak mau kelihatan)
-                ctx.strokeStyle = "rgba(0,0,0,0.2)";
-                ctx.beginPath();
-                ctx.moveTo(0, topPadding);
-                ctx.lineTo(canvas.width, topPadding);
-                ctx.moveTo(0, messageAreaStart);
-                ctx.lineTo(canvas.width, messageAreaStart);
-                ctx.stroke();
             }
 
             // Load foto dari input
@@ -171,16 +174,12 @@
                 const reader = new FileReader();
                 reader.onload = ev => {
                     photo.onload = () => {
-                        // hitung skala supaya foto muat dalam area
                         const fitScale = Math.max(
                             canvas.width / photo.width,
                             photoAreaHeight / photo.height
                         );
 
-                        // langsung kecilkan 50%
                         state.scale = fitScale * 0.52;
-
-                        // posisi tengah
                         state.x = (canvas.width - photo.width * state.scale) / 2;
                         state.y = topPadding + (photoAreaHeight - photo.height * state.scale) / 2;
 
@@ -191,13 +190,12 @@
                 reader.readAsDataURL(file);
             });
 
-            // Dragging
+            // Drag
             canvas.addEventListener('mousedown', e => {
                 state.dragging = true;
                 state.offsetX = e.offsetX - state.x;
                 state.offsetY = e.offsetY - state.y;
             });
-
             canvas.addEventListener('mousemove', e => {
                 if (state.dragging) {
                     state.x = e.offsetX - state.offsetX;
@@ -207,14 +205,12 @@
             });
             window.addEventListener('mouseup', () => state.dragging = false);
 
-            // Zoom scroll
+            // Zoom
             canvas.addEventListener('wheel', e => {
                 e.preventDefault();
                 const zoom = e.deltaY < 0 ? 1.1 : 0.9;
                 let newScale = state.scale * zoom;
-                if (newScale < state.minScale) newScale = state.minScale;
-                if (newScale > state.maxScale) newScale = state.maxScale;
-                state.scale = newScale;
+                state.scale = Math.min(Math.max(newScale, state.minScale), state.maxScale);
                 draw();
             });
 
@@ -226,6 +222,10 @@
                 menubar: false,
                 height: 200,
                 setup: function(editor) {
+                    const redraw = () => draw();
+                    editor.on('input', redraw);
+                    editor.on('KeyUp', redraw);
+
                     form.addEventListener('submit', function(e) {
                         editor.save();
                         draw();
