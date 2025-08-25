@@ -3,12 +3,13 @@
     <div class="grid grid-cols-2 gap-5">
         <div class="w-full">
             <div class="flex justify-start items-center h-screen relative">
-                <div class="chat-container relative bg-white rounded-lg shadow-lg overflow-hidden p-4 w-full h-full">
-
+                <div class="chat-container relative bg-white shadow-lg overflow-hidden p-4 w-full h-full">
+                    <img src="{{ asset('/images/logo.png') }}"class="h-20 text-center mx-auto" />
+                    <h1 class="uppercase text-white font-bold text-2xl text-center mb-5 font-default">Manifesto for a better
+                        indonesia
+                    </h1>
                     <!-- Bubble container -->
-                    <div id="chat-grid"
-                        class="chat-body relative w-full h-full overflow-hidden p-4 
-            grid grid-cols-5 gap-4 auto-rows-max">
+                    <div id="chat-grid" class="chat-body relative w-full h-full space-x-4 space-y-4">
                     </div>
                 </div>
 
@@ -77,8 +78,36 @@
             const defaultModal = document.getElementById('default-modal');
             const valueSearch = document.getElementById('value-search');
             const closeBtn = document.getElementById('close-btn');
+            const chatGrid = document.getElementById('chat-grid');
 
             wrapperChat.classList.add('hidden');
+
+            // ===== Global Variables =====
+            const rows = 5; // jumlah baris bubble
+            const cols = 20; // jumlah kolom bubble
+            let dataIndex = 0;
+
+            const data = [{
+                    name: "User 1",
+                    message: "Halo 👋"
+                },
+                {
+                    name: "User 2",
+                    message: "Laravel power!"
+                },
+                {
+                    name: "User 3",
+                    message: "Mantap 🔥"
+                },
+                {
+                    name: "User 4",
+                    message: "Selamat malam 🌙"
+                },
+                {
+                    name: "User 5",
+                    message: "Lagi sibuk 😅"
+                }
+            ];
 
             // ========= Drag Modal Chat =========
             const modal = document.getElementById("chat-modal");
@@ -107,33 +136,50 @@
                 document.body.style.userSelect = "auto";
             });
 
-            const grid = document.getElementById("chat-grid");
+            // ========= Init Grid Bubble =========
+            function initGrid() {
+                chatGrid.innerHTML = "";
+                chatGrid.classList.add("grid", "gap-2");
+                chatGrid.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+                chatGrid.style.gridTemplateRows = `repeat(${rows}, minmax(0, 1fr))`;
 
-            function spawnBubble(text) {
-                if (!grid) return;
-
-                // pilih kolom random (1-5)
-                const col = Math.floor(Math.random() * 5) + 1;
-
-                const bubble = document.createElement("div");
-                bubble.className = "bubble";
-                bubble.style.gridColumn = col;
-                bubble.innerText = text;
-
-                grid.appendChild(bubble);
-
-                // hapus setelah animasi selesai
-                bubble.addEventListener("animationend", () => bubble.remove());
+                for (let i = 0; i < rows * cols; i++) {
+                    const slot = document.createElement("div");
+                    slot.className = "bubble-slot flex items-center justify-center min-h-[60px]";
+                    chatGrid.appendChild(slot);
+                }
             }
 
-            setInterval(() => {
-                const messages = [
-                    "Halo 👋", "Laravel power!", "Mantap 🔥",
-                    "Selamat malam 🌙", "Lagi sibuk 😅"
-                ];
-                const msg = messages[Math.floor(Math.random() * messages.length)];
-                spawnBubble(msg);
-            }, 1500);
+            function spawnBubble() {
+                console.log("Spawn bubble..."); // cek jalan
+                const slots = Array.from(chatGrid.querySelectorAll(".bubble-slot"));
+                const emptySlots = slots.filter(s => s.innerHTML.trim() === "");
+                if (emptySlots.length === 0) return;
+
+                const targetSlot = emptySlots[Math.floor(Math.random() * emptySlots.length)];
+                const msg = data[dataIndex % data.length];
+                dataIndex++;
+
+                targetSlot.innerHTML = `
+        <div class="bubble transform translate-x-[-100%] opacity-0 transition-all duration-700 ease-out 
+                    bg-blue-200 p-3 rounded-lg shadow-md text-sm max-w-[120px] break-words">
+            <p class="font-semibold capitalize">${msg.name}</p>
+            <p class="text-gray-700 capitalize">${msg.message}</p>
+        </div>
+    `;
+
+                setTimeout(() => {
+                    const bubble = targetSlot.querySelector(".bubble");
+                    if (bubble) {
+                        bubble.classList.remove("translate-x-[-100%]", "opacity-0");
+                        bubble.classList.add("translate-x-0", "opacity-100");
+                    }
+                }, 50);
+            }
+
+
+            // jalankan bubble tiap 1.5 detik
+            setInterval(spawnBubble, 1500);
 
             // ========= Search Form =========
             searchForm.addEventListener('submit', function(e) {
@@ -151,18 +197,26 @@
                         })
                     })
                     .then(response => response.json())
-                    .then(data => {
+                    .then(result => { // ✅ ganti "data" jadi "result"
                         wrapperChat.classList.replace('hidden', 'w-full');
                         defaultModal.classList.remove('hidden');
                         defaultModal.classList.add('flex');
 
                         wrapperChat.innerHTML = '';
 
-                        if (data.length === 0) {
+                        if (result.length === 0) {
                             wrapperChat.innerHTML =
                                 `<p class="text-gray-500 text-sm text-center">Tidak ada hasil ditemukan.</p>`;
                             return;
                         }
+
+                        // map data sesuai kebutuhan
+                        const data = result.map(item => ({
+                            id: item.id,
+                            name: item.name,
+                            email: item.email ?? '-', // fallback kalau email kosong
+                            message: item.message ?? '' // fallback kalau message kosong
+                        }));
 
                         data.forEach((msg, i) => {
                             setTimeout(() => {
@@ -170,28 +224,28 @@
                                 row.setAttribute('onclick',
                                     `showProfileImage(${msg.id})`);
                                 row.setAttribute('data-target', msg.id);
-                                row.className =
-                                    "cursor-pointer w-full";
+                                row.className = "cursor-pointer w-full";
 
                                 row.innerHTML = `
-            <div class="block">
-                <div class="flex items-start gap-2.5 bg-gray-100 hover:bg-blue-200 rounded-lg p-3 shadow-sm">
-                    <img class="w-8 h-8 rounded-full" 
-                        src="https://ui-avatars.com/api/?name=${encodeURIComponent(msg.name)}&background=random" 
-                        alt="${msg.name}">
-                    <div class="flex flex-col gap-1 w-full">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm font-semibold text-gray-900">${msg.name}</span>
-                            <span class="text-xs text-gray-500">${msg.email}</span>
+                    <div class="block">
+                        <div class="flex items-start gap-2.5 bg-gray-100 hover:bg-blue-200 rounded-lg p-3 shadow-sm">
+                            <img class="w-8 h-8 rounded-full" 
+                                src="https://ui-avatars.com/api/?name=${encodeURIComponent(msg.name)}&background=random" 
+                                alt="${msg.name}">
+                            <div class="flex flex-col gap-1 w-full">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-semibold text-gray-900 capitalize">${msg.name}</span>
+                                    <span class="text-xs text-gray-500 capitalize">${msg.email}</span>
+                                </div>
+                                <div class="text-sm text-gray-700 text-left mt-3 capitalize">${msg.message}</div>
+                            </div>
                         </div>
-                        <div class="text-sm text-gray-700 text-left mt-3">${msg.message}</div>
                     </div>
-                </div>
-            </div>
-        `;
+                `;
                                 wrapperChat.appendChild(row);
-                            }, i * 200); // delay biar lebih jelas bergantian (0.2s per row)
+                            }, i * 200); // delay animasi
                         });
+
                         valueSearch.innerHTML = searchInput;
                     })
                     .catch(error => {
