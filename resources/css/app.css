@@ -16,8 +16,6 @@
     src: url('/fonts/HelveticaNeueBold.otf') format('opentype');
 }
 
-
-
 /* === Global Styling === */
 html,
 body {
@@ -123,10 +121,11 @@ body {
 .bubble {
     display: inline-block;
     /* biar width auto mengikuti isi */
-    background: #bdd2fc;
+    background: #bdd2fc6c;
     padding: 8px 12px;
     border-radius: 12px;
     font-size: 14px;
+    color: black;
     line-height: 1.4;
     /* biar teks rapi */
     height: auto;
@@ -136,8 +135,13 @@ body {
     word-wrap: break-word;
     /* pecah kata panjang */
     white-space: normal;
+    border: 1px solid white;
 }
 
 .font-default{
-    font-family: 'monash';
+    font-family: 'monash' !important;
+}
+
+#profile-full-image {
+    height: 300px !important;
 }
