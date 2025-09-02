@@ -57,7 +57,7 @@ body {
     justify-items: center;
     align-items: center;
     margin-top: 50px;
-    text-align: left !important;
+    text-align: center !important;
     height: 400px !important;
     position: relative !important;
     gap: 10px;
@@ -104,7 +104,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
-    text-align: left;
+    text-align: center !important;
     width: 100%;
     margin-top: 10px;
     /* penting agar clamp bekerja */
