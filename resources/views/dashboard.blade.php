@@ -5,11 +5,11 @@
             <div class="flex justify-start items-center h-screen relative">
                 <div class="chat-container relative bg-white shadow-lg overflow-hidden p-4 h-full aspect-[3/4]">
                     <img src="{{ asset('/images/logo.png') }}"class="h-20 text-center mx-auto" />
-                    <h1 class="uppercase text-white font-bold text-2xl text-center mb-2 font-default">Manifesto for a better
+                    <h1 class="uppercase text-white font-boldtext-2xl text-center mb-2 font-default">Manifesto for a better
                         indonesia
                     </h1>
                     <!-- Bubble container -->
-                    <div id="chat-grid" class="chat-body relative w-full h-full text-center gap-4 space-x-4 space-y-4">
+                    <div id="chat-grid" class="chat-body relative">
                     </div>
                 </div>
 

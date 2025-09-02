@@ -51,68 +51,18 @@ body {
 
 /* === Chat Body (bubble area) === */
 .chat-body {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    filter: opacity(0.9);
-    border-radius: 10px;
-    padding: 20px;
-    pointer-events: none;
-    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 150px;
+    justify-items: center;
+    align-items: center;
+    margin-top: 50px;
+    text-align: left !important;
+    height: 400px !important;
+    position: relative !important;
+    gap: 10px;
 }
 
-/*  */
-
-/* === Zoom In Animation === */
-@keyframes zoomIn {
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* === Optional Floating Animation (not used now) === */
-@keyframes float {
-    0% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-
-    50% {
-        transform: translateY(-30px);
-        opacity: 0.8;
-    }
-
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes zoomIn {
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
-
-
-@keyframes slide-right {
-    0% {
-        transform: translateX(0);
-        opacity: 1;
-    }
-
-    80% {
-        transform: translateX(120px);
-        opacity: 1;
-    }
-
-    100% {
-        transform: translateX(200px);
-        opacity: 0;
-    }
-}
 
 .animate-slide-right {
     animation: slide-right 2s forwards;
@@ -120,25 +70,46 @@ body {
 
 .bubble {
     display: inline-block;
-    /* biar width auto mengikuti isi */
+    overflow: hidden;
+    text-overflow: ellipsis;
     background: #bdd2fc6c;
     padding: 8px 12px;
     border-radius: 12px;
     font-size: 14px;
     color: black;
     line-height: 1.4;
-    /* biar teks rapi */
-    height: auto;
-    /* jangan fix height */
-    max-width: 250px;
-    /* batas lebar maksimal */
+    max-width: 130px;
     word-wrap: break-word;
-    /* pecah kata panjang */
     white-space: normal;
     border: 1px solid white;
+    height: 100%;
+    width: 100%;
+    text-transform: capitalize;
 }
 
-.font-default{
+.bubble strong {
+    margin-bottom: 10px !important;
+    text-align: left !important;
+}
+
+.bubble .bubble-text {
+    display: -webkit-box !important;
+    text-align: left;
+}
+
+.bubble-text {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 5 !important;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    text-align: left;
+    width: 100%;
+    /* penting agar clamp bekerja */
+}
+
+.font-default {
     font-family: 'monash' !important;
 }
 
