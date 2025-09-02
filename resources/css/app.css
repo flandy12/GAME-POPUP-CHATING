@@ -115,5 +115,22 @@ body {
 }
 
 #profile-full-image {
-    height: 300px !important;
+    height: 400px !important;
+}
+
+#modal-box {
+    top: 150px !important;
+}
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+    -webkit-transition: opacity 0.5s ease-out;
+    -moz-transition: opacity 0.5s ease-out;
+    -ms-transition: opacity 0.5s ease-out;
+    -o-transition: opacity 0.5s ease-out;
+}
+
+.fade-in {
+    opacity: 1;
+    transition: opacity 0.5s ease-in;
 }

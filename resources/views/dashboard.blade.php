@@ -2,7 +2,7 @@
 @section('content')
     <div class="grid grid-cols-2 gap-5">
         <div class="w-full">
-            <div class="flex justify-start items-center h-screen relative">
+            <div class="flex justify-start items-center h-screen relative left-0 right-0">
                 <div class="chat-container relative bg-white shadow-lg overflow-hidden p-4 h-full aspect-[3/4]">
                     <img src="{{ asset('/images/logo.png') }}"class="h-20 text-center mx-auto" />
                     <h1 class="uppercase text-white font-boldtext-2xl text-center mb-2 font-default">Manifesto for a better
@@ -10,6 +10,17 @@
                     </h1>
                     <!-- Bubble container -->
                     <div id="chat-grid" class="chat-body relative">
+                    </div>
+
+                    <!-- Modal Wrapper -->
+                    <div id="image-modal" class="hidden inset-0  flex items-center justify-center z-50 abolute left-0 right-0">
+                        <div id="modal-box" class=" bg-white p-3 rounded-lg shadow-lg cursor-move absolute top[-400px]">
+                            <!-- Tombol Close -->
+                            <button id="close-modal" class="absolute top-2 right-2 text-red-500 font-bold">X</button>
+                            <!-- Image -->
+                            <img id="profile-full-image" src=""
+                                class="relative max-w-[90vw] max-h-[80vh] rounded-lg">
+                        </div>
                     </div>
                 </div>
 
@@ -29,16 +40,6 @@
                             <div class="flex-1 overflow-y-auto p-4 space-y-4" id="wrapper-chating"></div>
                             <!-- Modal untuk full image -->
                         </div>
-                    </div>
-                </div>
-
-                <!-- Modal Wrapper -->
-                <div id="image-modal" class="hidden fixed inset-0  flex items-center justify-start z-50 ">
-                    <div id="modal-box" class="relative bg-white p-3 rounded-lg shadow-lg cursor-move">
-                        <!-- Tombol Close -->
-                        <button id="close-modal" class="absolute top-2 right-2 text-red-500 font-bold">X</button>
-                        <!-- Image -->
-                        <img id="profile-full-image" src="" class="max-w-[90vw] max-h-[80vh] rounded-lg">
                     </div>
                 </div>
 

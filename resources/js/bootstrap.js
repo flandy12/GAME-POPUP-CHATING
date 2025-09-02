@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.chat-body');
     const cols = 3; // 3 kolom
     const rows = 2; // 2 baris
-    const delay = 2000; // update setiap 2 detik
+    const delay = 4000; // update setiap 2 detik
     const maxBubbles = cols * rows; // total 6 bubble
     let pesanIndex = 0;
     let pesanArray = [];
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fungsi buat bubble
     function addBubble(text, name) {
         const bubble = document.createElement('div');
-        bubble.className = 'bubble';
+        bubble.className = 'bubble fade-in';
         // bubble.style.position = 'absolute';
         bubble.style.padding = '10px';
         bubble.style.color = '#fff';
@@ -377,15 +377,26 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < bubbleElements.length; i++) {
             const msg = pesanLoop[pesanIndex % pesanLoop.length];
             const bubble = bubbleElements[i];
-            bubble.innerHTML = `
-                <strong>${msg.name}</strong>
-                <span class="bubble-text">${msg.text}</span>
-            `;
+
+            // Tambahkan class fade-out
+            bubble.classList.remove('fade-in');
+            bubble.classList.add('fade-out');
+
+            setTimeout(() => {
+                bubble.innerHTML = `
+                    <strong>${msg.name}</strong>
+                    <span class="bubble-text">${msg.text}</span>
+                `;
+                bubble.classList.remove('fade-out');
+                bubble.classList.add('fade-in');
+            }, 500); // fade-out selesai dalam 0.5s
+
             pesanIndex++;
         }
     }
 
     setInterval(updateBubbles, delay);
+
     window.addEventListener('resize', repositionBubbles);
 
     function stripHTML(html) {
