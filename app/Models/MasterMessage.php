@@ -16,6 +16,7 @@ class MasterMessage extends Model
         'name',
         'email',
         'message',
-        'merged_image'
+        'merged_image',
+        'institution'
     ];
 }

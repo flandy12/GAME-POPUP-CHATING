@@ -26,11 +26,9 @@
             const form = document.getElementById('contact-form');
             const topPadding = 150;
             const photoAreaHeight = 310;
-            const messageAreaStart = topPadding + photoAreaHeight;
 
             let photo = new Image(); // foto hasil upload user
             let frameImage = new Image(); // frame default
-            frameImage.src = "/images/frame-04.png"; // ganti dengan asset() jika Laravel
 
             let cropper = null;
 
@@ -45,11 +43,21 @@
                 maxScale: 3
             };
 
-            // render frame default saat pertama kali diload
+            // frame default
+            frameImage.src = "/images/frame-01.png";
             frameImage.onload = function() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
+                draw();
             };
+
+            // ketika user pilih frame baru
+            document.querySelectorAll('input[name="frame"]').forEach(radio => {
+                radio.addEventListener("change", e => {
+                    frameImage.src = e.target.value;
+                    frameImage.onload = () => {
+                        draw();
+                    };
+                });
+            });
 
             // pilih foto -> buka modal crop
             photoInput.addEventListener("change", e => {
@@ -117,7 +125,7 @@
                     const testLine = line + text[i];
                     const testWidth = ctx.measureText(testLine).width;
 
-                    if (testWidth > 240 && line !== '') {
+                    if (testWidth > maxWidth && line !== '') {
                         ctx.fillText(line, x, y);
                         line = text[i]; // mulai baris baru
                         y += lineHeight;
@@ -141,13 +149,11 @@
                     const drawWidth = photo.width * state.scale;
                     const drawHeight = photo.height * state.scale;
 
-                    // pastikan foto tetap di canvas
                     const x = Math.min(Math.max(state.x, 0), canvas.width - drawWidth);
                     const y = Math.min(Math.max(state.y, 0), canvas.height - drawHeight);
 
                     ctx.drawImage(photo, x, y, drawWidth, drawHeight);
 
-                    // catat posisi bawah foto
                     imageBottom = y + drawHeight;
                 }
 
@@ -166,17 +172,14 @@
                     ctx.fillStyle = "black";
                     ctx.textAlign = "center";
 
-                    const padding = 50; // padding kiri-kanan supaya tidak mepet frame
+                    const padding = 110;
                     const maxWidth = canvas.width - (padding * 2);
                     const lineHeight = fontSize * 1.4;
 
-                    // posisi teks = 40px di bawah foto
                     let textY = imageBottom + 40;
-
-                    // batas bawah frame (jangan melebihi canvas)
                     const bottomLimit = canvas.height - 40;
                     if (textY + lineHeight > bottomLimit) {
-                        textY = bottomLimit - lineHeight; // geser ke atas agar muat
+                        textY = bottomLimit - lineHeight;
                     }
 
                     wrapText(ctx, messageValue, canvas.width / 2, textY, maxWidth, lineHeight);
@@ -220,7 +223,7 @@
                         });
                         if (content.length >= 170 && e.key.length === 1 && !e.ctrlKey && !e
                             .metaKey) {
-                            e.preventDefault(); // cegah input lebih dari 170
+                            e.preventDefault();
                             alert('Maksimal 170 karakter!');
                         }
                     });
@@ -234,14 +237,13 @@
                             alert('Maksimal 170 karakter!');
                         }
                     });
-                    // Trigger redraw ketika ada perubahan di editor
+
                     editor.on('input KeyUp change', () => {
                         draw();
                     });
 
-                    // Validasi + generate image saat form submit
                     form.addEventListener('submit', function(e) {
-                        editor.save(); // update <textarea> hidden
+                        editor.save();
                         draw();
 
                         const textValue = editor.getContent({
@@ -254,13 +256,11 @@
                             return;
                         }
 
-                        // Simpan hasil canvas ke input hidden
                         const mergedData = canvas.toDataURL('image/png');
                         mergedImage.value = mergedData;
                     });
                 }
             });
-
         });
     </script>
 
@@ -268,61 +268,50 @@
 </head>
 
 <body class="bg-[#e3e8f8] w-full">
-    <div class="container mx-auto xl:w-[1200px] text-2xl flex flex-col items-center xl:flex-row gap-5 p-10 flex-col-2">
+    <div class="max-w-5xl mx-auto grid grid-cols-1 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-1 gap-6 p-4">
         <!-- Preview Utama -->
-        <div class="mb-5 mx-auto text-center p-4 flex justify-center flex-col w-full"
-            style="width: -webkit-fill-available;">
+        <div class="mb-5 text-center p-4 flex justify-center flex-col rounded-lg bg-gray-50">
             <label class="block text-gray-600 mb-5 font-semibold">Preview dengan Frame</label>
-            <div
-                class="border rounded-lg w-full bg-gray-100 flex items-center justify-center aspect-[2/3] relative overflow-hidden">
-                <!-- hasil crop + frame ditampilkan disini -->
+
+            <div class="flex items-center justify-center w-full max-w-xs mx-auto aspect-[2/3] relative overflow-hidden">
                 <!-- Canvas utama -->
-                <canvas id="frameCanvas" width="600" height="900"></canvas>
+                <canvas id="frameCanvas" class="w-full h-full border rounded-lg bg-white" width="600" height="900"></canvas>
             </div>
 
-            <small class="text-gray-500 mt-5 font-semibold">Geser & zoom foto agar pas dengan frame</small>
-        </div>
-
-        <!-- Modal -->
-        <div id="cropperModal"
-            class="fixed inset-0 z-50 hidden items-center justify-center bg-[#00000029] bg-opacity-75 black opse bg-opacity-50">
-            <!-- Konten modal -->
-            <div class="flex justify-center items-center h-full">
-                <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 relative">
-
-                    <!-- Tombol close pojok kanan -->
-                    <button id="cancelCrop" class="absolute top-3 right-3 text-gray-500 hover:text-red-500">
-                        ✕
-                    </button>
-
-                    <!-- Judul -->
-                    <h2 class="text-lg font-semibold mb-4 text-center">Crop Gambar</h2>
-
-                    <!-- Area gambar -->
-                    <div class="w-full flex justify-center mb-4">
-                        <img id="photoPreviewModal" class="max-h-[400px] rounded-lg border" />
-                    </div>
-
-                    <!-- Tombol aksi -->
-                    <div class="flex justify-end gap-3">
-                        <button id="cancelCrop" class="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400">
-                            Batal
-                        </button>
-                        <button id="saveCrop" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
-                            Simpan
-                        </button>
-                    </div>
-
-                </div>
-            </div>
+            <small class="text-gray-500 mt-5 font-semibold block">
+                Geser & zoom foto agar pas dengan frame
+            </small>
         </div>
 
         <!-- Form -->
-        <form id="contact-form" class="w-full p-4 mb-10 mx-auto h-fit bg-white rounded-lg shadow-lg"
-            action="{{ route('form.submit') }}" enctype="multipart/form-data" method="POST">
+        <form id="contact-form" class="bg-white p-4 rounded-lg shadow w-full" action="{{ route('form.submit') }}"
+            enctype="multipart/form-data" method="POST">
 
             @csrf
 
+            <!-- Pilih Frame -->
+            <div class="mb-5">
+                <label class="block mb-2 font-medium text-gray-600">Pilih Frame</label>
+                <div class="flex flex-wrap gap-3">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="frame" value="/images/frame-01.png" checked class="hidden peer">
+                        <img src="/images/frame-01.png" alt="Frame 1"
+                            class="w-16 h-24 border rounded peer-checked:ring-2 peer-checked:ring-blue-500">
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="frame" value="/images/frame-02.png" class="hidden peer">
+                        <img src="/images/frame-02.png" alt="Frame 2"
+                            class="w-16 h-24 border rounded peer-checked:ring-2 peer-checked:ring-blue-500">
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="frame" value="/images/frame-04.png" class="hidden peer">
+                        <img src="/images/frame-04.png" alt="Frame 3"
+                            class="w-16 h-24 border rounded peer-checked:ring-2 peer-checked:ring-blue-500">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Upload -->
             <div class="mb-5">
                 <label for="photo" class="block mb-2 font-medium text-gray-600">Upload Foto</label>
                 <input type="file" name="photo" id="photo" accept="image/*"
@@ -340,10 +329,10 @@
             </div>
 
             <div class="mb-5">
-                <label for="email" class="block mb-2 font-medium text-gray-600">Your email</label>
-                <input type="email" name="email" id="email"
+                <label for="institution" class="block mb-2 font-medium text-gray-600">Instansi</label>
+                <input type="text" name="institution" id="institution"
                     class="bg-gray-50 border border-gray-300 text-gray-600 rounded-lg block w-full p-2.5"
-                    placeholder="name@flowbite.com" required />
+                    placeholder="Instansi" required />
             </div>
 
             <div class="mb-5">
@@ -354,10 +343,46 @@
             </div>
 
             <button type="submit"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg w-full sm:w-auto px-5 py-2.5 text-center">
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none 
+                       focus:ring-blue-300 font-medium rounded-lg w-full sm:w-auto px-5 py-2.5 text-center">
                 Submit
             </button>
         </form>
+    </div>
+
+
+    <!-- Modal -->
+    <div id="cropperModal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-[#00000029] bg-opacity-75 black opse bg-opacity-50">
+        <!-- Konten modal -->
+        <div class="flex justify-center items-center h-full">
+            <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 relative">
+
+                <!-- Tombol close pojok kanan -->
+                <button id="cancelCrop" class="absolute top-3 right-3 text-gray-500 hover:text-red-500">
+                    ✕
+                </button>
+
+                <!-- Judul -->
+                <h2 class="text-lg font-semibold mb-4 text-center">Crop Gambar</h2>
+
+                <!-- Area gambar -->
+                <div class="w-full flex justify-center mb-4">
+                    <img id="photoPreviewModal" class="max-h-[400px] rounded-lg border" />
+                </div>
+
+                <!-- Tombol aksi -->
+                <div class="flex justify-end gap-3">
+                    <button id="cancelCrop" class="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400">
+                        Batal
+                    </button>
+                    <button id="saveCrop" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                        Simpan
+                    </button>
+                </div>
+
+            </div>
+        </div>
     </div>
 </body>
 

@@ -28,7 +28,8 @@ Route::get('/form', function () {
 Route::post('/form', function (Request $request) {
     $data = $request->validate([
         'name'    => 'required|string|max:255',
-        'email'   => 'required|email|max:255',
+        // 'email'   => 'nullable|email|max:255',
+        'institution' => 'required|string|max:255',
         'message' => 'required|string|max:5000',
         'merged_image' => 'required|string', // hasil canvas (base64)
     ]);
