@@ -16,6 +16,14 @@
     src: url('/fonts/HelveticaNeueBold.otf') format('opentype');
 }
 
+@font-face {
+    font-family: 'Helvetica Now Text';
+    src: url('../fonts/helvetica-now-text-regular.ttf') format('truetype');
+    font-weight: 400; /* Regular */
+    font-style: normal;
+}
+
+
 /* === Global Styling === */
 html,
 body {
@@ -84,6 +92,7 @@ body {
     border: 1px solid white;
     height: 100%;
     width: 100%;
+    font-family: 'Helvetica Now Text', sans-serif !important;
     text-transform: capitalize;
 }
 
@@ -111,7 +120,7 @@ body {
 }
 
 .font-default {
-    font-family: 'monash' !important;
+    font-family: 'Helvetica Now Text', sans-serif !important;
 }
 
 #profile-full-image {
