@@ -270,7 +270,7 @@
 <body class="bg-[#e3e8f8] w-full">
     <div class="max-w-5xl mx-auto grid grid-cols-1 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-1 gap-6 p-4">
         <!-- Preview Utama -->
-        <div class="mb-5 text-center p-4 flex justify-center flex-col rounded-lg bg-gray-50">
+        <div class="mb-5 text-center p-4 flex justify-center flex-col rounded-lg bg-gray-50 flex-1">
             <label class="block text-gray-600 mb-5 font-semibold">Preview dengan Frame</label>
 
             <div class="flex items-center justify-center w-full max-w-xs mx-auto aspect-[2/3] relative overflow-hidden">
@@ -343,13 +343,12 @@
             </div>
 
             <button type="submit"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none 
+                class="text-white bg-[#309fdf] hover:bg-[#006DAE] focus:ring-4 focus:outline-none 
                        focus:ring-blue-300 font-medium rounded-lg w-full sm:w-auto px-5 py-2.5 text-center">
                 Submit
             </button>
         </form>
     </div>
-
 
     <!-- Modal -->
     <div id="cropperModal"
@@ -376,7 +375,7 @@
                     <button id="cancelCrop" class="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400">
                         Batal
                     </button>
-                    <button id="saveCrop" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                    <button id="saveCrop" class="px-4 py-2 rounded-lg bg-[#006DAE] text-white hover:bg-[#006DAE]">
                         Simpan
                     </button>
                 </div>

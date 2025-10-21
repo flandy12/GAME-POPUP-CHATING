@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         targetSlot.innerHTML = `
 <div class="bubble transform translate-x-[-100%] opacity-0 transition-all duration-700 ease-out 
-            bg-blue-200 p-3 rounded-lg shadow-md text-sm max-w-[120px] break-words">
+            bg-[#006DAE] p-3 rounded-lg shadow-md text-sm max-w-[120px] break-words">
     <p class="font-semibold capitalize">${msg.name}</p>
     <p class="text-gray-700 capitalize">${msg.message}</p>
 </div>
@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bubble.style.padding = '10px';
         bubble.style.color = '#fff';
         bubble.style.borderRadius = '8px';
-        bubble.style.background = '#3498db';
+        bubble.style.background = '#006DAE';
         bubble.style.width = '150px';
         bubble.style.wordWrap = 'break-word';
         bubble.style.textAlign = 'center';
