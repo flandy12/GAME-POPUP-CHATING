@@ -55,7 +55,6 @@ Route::post('/form', function (Request $request) {
     return redirect()
         ->route('form')
         ->with('success', 'Your message has been sent successfully.');
-        
 })->name('form.submit');
 
 Route::get('/messages', function () {
@@ -75,9 +74,9 @@ Route::post('/search', function (Request $request) {
     return response()->json($results);
 });
 
+Route::get('/user/{name}', function ($name) {
+    $result = MasterMessage::where('name', $name)->firstOrFail();
+    $mergedImage = $result->merged_image;
 
-Route::get('/user/{id}', function($id) {
-    $results = MasterMessage::findOrFail($id);
-
-    return response()->json($results);
+    return view('download', ['mergedImage' => $mergedImage]);
 });

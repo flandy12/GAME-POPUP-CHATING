@@ -242,23 +242,45 @@
                         draw();
                     });
 
+                    // submit handler
                     form.addEventListener('submit', function(e) {
+                        e.preventDefault();
                         editor.save();
                         draw();
 
-                        const textValue = editor.getContent({
-                            format: 'text'
-                        }).trim();
-                        if (!textValue) {
-                            e.preventDefault();
+                        const mergedData = canvas.toDataURL('image/png');
+                        mergedImage.value = mergedData;
+
+                        if (!editor.getContent({
+                                format: 'text'
+                            }).trim()) {
                             alert('Message is required.');
                             editor.focus();
                             return;
                         }
 
-                        const mergedData = canvas.toDataURL('image/png');
-                        mergedImage.value = mergedData;
+                        // --- tampilkan modal download ---
+                        const modal = document.getElementById('downloadModal');
+                        modal.classList.remove('hidden');
+
+                        document.getElementById('cancelDownload').onclick = () => {
+                            modal.classList.add('hidden');
+                            form.submit();
+                        };
+
+                        document.getElementById('confirmDownload').onclick = () => {
+                            const link = document.createElement('a');
+                            link.href = mergedData;
+                            link.download = 'hasil-crop.png';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+
+                            modal.classList.add('hidden');
+                            form.submit();
+                        };
                     });
+
                 }
             });
         });
@@ -268,6 +290,24 @@
 </head>
 
 <body class="bg-[#e3e8f8] w-full">
+    <!-- Modal -->
+    <div id="downloadModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/20">
+        <div class="bg-white rounded-xl shadow-lg max-w-sm w-full p-6">
+            <h2 class="text-lg font-semibold mb-4 text-center">Download Gambar</h2>
+            <p class="text-center text-gray-600 mb-6">
+                Apakah kamu ingin mendownload gambar hasil crop?
+            </p>
+            <div class="flex justify-center gap-4">
+                <button id="cancelDownload" class="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400">
+                    Tidak
+                </button>
+                <button id="confirmDownload" class="px-4 py-2 rounded-lg bg-[#006DAE] text-white hover:bg-[#005B8C]">
+                    Ya, Download
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="max-w-5xl mx-auto grid grid-cols-1 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-1 gap-6 p-4">
         <!-- Preview Utama -->
         <div class="mb-5 text-center p-4 flex justify-center flex-col rounded-lg bg-gray-50 flex-1">
@@ -275,7 +315,8 @@
 
             <div class="flex items-center justify-center w-full max-w-xs mx-auto aspect-[2/3] relative overflow-hidden">
                 <!-- Canvas utama -->
-                <canvas id="frameCanvas" class="w-full h-full border rounded-lg bg-white" width="600" height="900"></canvas>
+                <canvas id="frameCanvas" class="w-full h-full border rounded-lg bg-white" width="600"
+                    height="900"></canvas>
             </div>
 
             <small class="text-gray-500 mt-5 font-semibold block">
@@ -343,7 +384,7 @@
             </div>
 
             <button type="submit"
-                class="text-white bg-[#309fdf] hover:bg-[#006DAE] focus:ring-4 focus:outline-none 
+                class="text-white bg-[#006DAE] hover:bg-[#005B8C] focus:ring-4 focus:outline-none 
                        focus:ring-blue-300 font-medium rounded-lg w-full sm:w-auto px-5 py-2.5 text-center">
                 Submit
             </button>
